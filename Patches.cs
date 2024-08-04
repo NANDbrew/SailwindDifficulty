@@ -12,41 +12,22 @@ namespace SailwindDifficulty
 {
     internal class Patches
     {
-        [HarmonyPatch(typeof(StartMenu), "Start")]
-        internal static class FPatcher
-        {
-            [HarmonyPostfix]
-            public static void UpdatePatch(ref bool ___fPressed)
-            {
-                ___fPressed = true;
-
-            }
-        }
 
         [HarmonyPatch(typeof(StarterSet), "InitiateStarterSet")]
         internal static class StarterSetPatches
         {
-            public static void Prefix(StarterSet __instance, PortRegion ___region, Transform ___starterBoat)
+            public static void Prefix(StarterSet __instance, PortRegion ___region, Transform ___starterBoat, ref Vector3[] __state)
             {
-
-                if (Plugin.difficulty.Value == "hard")
+                if (___region == PortRegion.medi)
                 {
-                    if (___region == PortRegion.medi)
+                    if (Plugin.difficulty.Value == Difficulty.Hard)
                     {
                         UnityEngine.Object.Destroy(__instance.transform.Find("10 barrel water").gameObject);
+                        var mug = __instance.transform.Find("100 mug wood");
                         UnityEngine.Object.Destroy(__instance.transform.Find("82 compass M").gameObject);
                         UnityEngine.Object.Destroy(__instance.transform.Find("114 lantern M").gameObject);
                         UnityEngine.Object.Destroy(__instance.transform.Find("91 scroll tutorial M").gameObject);
                         UnityEngine.Object.Destroy(__instance.transform.Find("118 map M").gameObject);
-                        //UnityEngine.Object.Destroy(__instance.transform.Find("7 crate cheese (good)").gameObject);
-
-                        /*var mug = __instance.transform.Find("100 mug wood");
-                        mugPos = mug.localPosition;
-                        UnityEngine.Object.Destroy(mug.gameObject);*/
-
-                        var mug = __instance.transform.Find("100 mug wood");
-
-                        //mug.gameObject.SetActive(false);
 
                         var mug2 = UnityEngine.Object.Instantiate(SaveLoadManager.instance.GetComponent<PrefabsDirectory>().directory[102], __instance.transform);
                         mug2.transform.localPosition = mug.transform.localPosition;
@@ -54,67 +35,81 @@ namespace SailwindDifficulty
                         UnityEngine.Object.Destroy(mug.gameObject);
                         mug2.GetComponent<ShipItemBottle>().amount = 1;
                         mug2.GetComponent<ShipItemBottle>().health = 3;
-
                     }
-                    if (___region == PortRegion.alankh)
+                    else if (Plugin.difficulty.Value == Difficulty.Casual)
                     {
-                        UnityEngine.Object.Destroy(__instance.transform.Find("10 barrel water").gameObject);
+                        UnityEngine.Object.Destroy(__instance.transform.Find("52 cheese").gameObject);
+                        var water = __instance.transform.Find("10 barrel water");
+                        __state = new Vector3[] { water.localPosition, water.localEulerAngles };
+                        UnityEngine.Object.Destroy(water.gameObject);
+                    }
+                    else
+                    {
+                        UnityEngine.Object.Destroy(__instance.transform.Find("52 cheese").gameObject);
+                    }
+                }
+                if (___region == PortRegion.alankh)
+                {
+                    if (Plugin.difficulty.Value == Difficulty.Hard)
+                    {
                         UnityEngine.Object.Destroy(__instance.transform.Find("80 compass A").gameObject);
                         UnityEngine.Object.Destroy(__instance.transform.Find("110 lantern A").gameObject);
                         UnityEngine.Object.Destroy(__instance.transform.Find("91 scroll tutorial A").gameObject);
                         UnityEngine.Object.Destroy(__instance.transform.Find("116 map A").gameObject);
-                        UnityEngine.Object.Destroy(__instance.transform.Find("8 goat cheese (good)").gameObject);
+                        UnityEngine.Object.Destroy(__instance.transform.Find("10 barrel water").gameObject);
+                        UnityEngine.Object.Destroy(__instance.transform.Find("8 crate goat cheese (good)").gameObject);
 
-                        /*var mug = __instance.transform.Find("101 mug clay");
-                        mugPos = mug.localPosition;
-                        UnityEngine.Object.Destroy(mug.gameObject);*/
-
-                        //__instance.transform.Find("101 mug clay").gameObject.GetComponent<ShipItemBottle>().FillBottle(1f, 3f);
                         var mug = __instance.transform.Find("101 mug clay").gameObject.GetComponent<ShipItemBottle>();
                         mug.amount = 1;
                         mug.health = 3;
-
                     }
-                    if (___region == PortRegion.emerald)
+                    else if (Plugin.difficulty.Value == Difficulty.Casual)
                     {
-                        UnityEngine.Object.Destroy(__instance.transform.Find("10 barrel water").gameObject);
+                        UnityEngine.Object.Destroy(__instance.transform.Find("8 crate goat cheese (good)").gameObject);
+                        var water = __instance.transform.Find("10 barrel water");
+                        __state = new Vector3[] { water.localPosition, water.localEulerAngles };
+                        UnityEngine.Object.Destroy(water.gameObject);
+                    }
+                }
+                if (___region == PortRegion.emerald)
+                {
+                    if (Plugin.difficulty.Value == Difficulty.Hard)
+                    {
                         UnityEngine.Object.Destroy(__instance.transform.Find("81 compass E").gameObject);
                         UnityEngine.Object.Destroy(__instance.transform.Find("111 lantern E yellow").gameObject);
                         UnityEngine.Object.Destroy(__instance.transform.Find("91 scroll tutorial E").gameObject);
                         UnityEngine.Object.Destroy(__instance.transform.Find("117 map E").gameObject);
-                        UnityEngine.Object.Destroy(__instance.transform.Find("1 crate salmon (E)").gameObject);
-                        //UnityEngine.Object.Destroy(__instance.transform.Find("100 mug wood").gameObject);
-                        /*var mug = __instance.transform.Find("100 mug wood");
-                        mugPos = mug.localPosition;
-                        UnityEngine.Object.Destroy(mug.gameObject);*/
 
-                        //__instance.transform.Find("100 mug wood").gameObject.GetComponent<ShipItemBottle>().FillBottle(1f, 3f);
+                        UnityEngine.Object.Destroy(__instance.transform.Find("10 barrel water").gameObject);
+                        UnityEngine.Object.Destroy(__instance.transform.Find("1 crate salmon (E)").gameObject);
                         var mug = __instance.transform.Find("100 mug wood").gameObject.GetComponent<ShipItemBottle>();
                         mug.amount = 1;
                         mug.health = 3;
-
                     }
-                }
-                if (Plugin.difficulty.Value == "easy" || Plugin.difficulty.Value == "normal")
-                {
-                    /*                if (___region == PortRegion.emerald)
-                                    {
-                                        var crate = __instance.transform.Find("1 crate salmon (E)");
-                                        emCratePos = crate.position;
-                                        emCrateRot = crate.rotation;
-                                        UnityEngine.Object.Destroy(crate);
-                                    }*/
-                    if (___region == PortRegion.medi)
+                    else if (Plugin.difficulty.Value == Difficulty.Casual)
                     {
-                        UnityEngine.Object.Destroy(__instance.transform.Find("52 cheese").gameObject);
+                        UnityEngine.Object.Destroy(__instance.transform.Find("1 crate salmon (E)").gameObject);
+                        var water = __instance.transform.Find("10 barrel water");
+                        __state = new Vector3[] { water.localPosition, water.localEulerAngles };
+                        UnityEngine.Object.Destroy(water.gameObject);
                     }
-
                 }
+                Debug.Log("SailwindDifficulty: whacked original starter set");
             }
 
-            public static void Postfix(StarterSet __instance, PortRegion ___region, Transform ___starterBoat)
+            public static void Postfix(StarterSet __instance, PortRegion ___region, Transform ___starterBoat, Vector3[] __state)
             {
-                if (Plugin.difficulty.Value == "hard")
+                if (Plugin.difficulty.Value == Difficulty.Casual && __state != null)
+                {
+                    var booze = UnityEngine.Object.Instantiate(SaveLoadManager.instance.GetComponent<PrefabsDirectory>().directory[11], __instance.transform);
+                    booze.transform.localPosition = __state[0];
+                    booze.transform.localEulerAngles = __state[1];
+                    booze.GetComponent<ShipItem>().sold = true;
+                    booze.GetComponent<SaveablePrefab>().RegisterToSave();
+                    booze.GetComponent<Good>().RegisterAsMissionless();
+
+                }
+                if (Plugin.difficulty.Value == Difficulty.Hard)
                 {
                     if (___region == PortRegion.medi)
                     {
@@ -149,7 +144,7 @@ namespace SailwindDifficulty
                     bottle.GetComponent<SaveablePrefab>().RegisterToSave();*/
 
                 }
-                if (Plugin.difficulty.Value == "easy" || Plugin.difficulty.Value == "normal")
+                if (Plugin.difficulty.Value == Difficulty.Easy || Plugin.difficulty.Value == Difficulty.Normal)
                 {
                     if (___region == PortRegion.medi)
                     {
@@ -175,7 +170,7 @@ namespace SailwindDifficulty
                     }
 
                 }
-                if (Plugin.difficulty.Value == "easy")
+                if (Plugin.difficulty.Value == Difficulty.Easy || Plugin.difficulty.Value == Difficulty.Casual)
                 {
                     if (___region == PortRegion.alankh)
                     {
@@ -191,7 +186,9 @@ namespace SailwindDifficulty
                     }
                 }
                 //GameObject shipItemCrate = SaveLoadManager.instance.GetComponent<PrefabsDirectory>().directory[8];
-                GameState.modData.Add("nandbrew.difficulty", Plugin.difficulty.Value);
+                //GameState.modData.Add("nandbrew.difficulty", Plugin.difficulty.Value);
+                Debug.Log("SailwindDifficulty: added new starter set");
+
             }
         }
 
@@ -202,7 +199,7 @@ namespace SailwindDifficulty
             [HarmonyPrefix]
             public static bool ActivateMissionListUIPatch(bool openEconomyUI, Port ___port)
             {
-                if (openEconomyUI)
+                if (openEconomyUI && Plugin.instantTrade.Value)
                 {
                     EconomyUI.instance.OpenUI(___port.GetComponent<IslandMarket>());
                     return false;
@@ -267,7 +264,7 @@ namespace SailwindDifficulty
                 {
                     Refs.ovrController.SetMoveScaleMultiplier(1f);
                 }
-                if (Plugin.difficulty.Value == "easy")
+                if (Plugin.difficulty.Value == Difficulty.Normal || Plugin.difficulty.Value == Difficulty.Hard || limitingSpeed)
                 {
                     return false;
                 }
@@ -292,7 +289,7 @@ namespace SailwindDifficulty
             [HarmonyPostfix]
             public static void Postfix(float ___currentSleepDuration)
             {
-                if (Plugin.difficulty.Value == "easy" && GameState.sleeping && !GameState.inBed && !GameState.recovering && ___currentSleepDuration > 2f)
+                if (Plugin.difficulty.Value == Difficulty.Easy && GameState.sleeping && !GameState.inBed && !GameState.recovering && ___currentSleepDuration > 2f)
                 {
                     Sleep.instance.WakeUp();
                 }   
@@ -306,7 +303,7 @@ namespace SailwindDifficulty
             [HarmonyPrefix]
             public static bool PassOut()
             {
-                if (Plugin.difficulty.Value == "easy")
+                if (Plugin.difficulty.Value == Difficulty.Easy || Plugin.difficulty.Value == Difficulty.Casual)
                 {
                     return false;
                 }
@@ -315,13 +312,13 @@ namespace SailwindDifficulty
 
             [HarmonyPatch("LateUpdate")]
             [HarmonyPrefix]
-            public static bool LateUpdate(ref float ___alcohol, bool ___godMode, ref float ___sleepDebt, ref float ___sleep, ref float ___food, ref float ___water)
+            public static bool LateUpdate(ref float ___alcohol, ref float ___sleepDebt, ref float ___sleep, ref float ___food, ref float ___water)
             {
-                if (Plugin.difficulty.Value != "easy" || !GameState.playing || GameState.recovering || (bool)GameState.currentShipyard || (EconomyUI.instance.uiActive && !Debugger.buildDebugModeOn))
+                if (!GameState.playing || GameState.recovering || (bool)GameState.currentShipyard || (EconomyUI.instance.uiActive && !Debugger.buildDebugModeOn))
                 {
                     return true;
                 }
-                if (!___godMode) 
+                if (Plugin.difficulty.Value == Difficulty.Easy) 
                 {
                     ___sleep += Time.deltaTime * Sun.sun.timescale * 1f;
                     ___food += Time.deltaTime * Sun.sun.timescale * 1.3f;
@@ -329,6 +326,10 @@ namespace SailwindDifficulty
                     return true;
                 }
 
+                if (Plugin.difficulty.Value != Difficulty.Casual)
+                {
+                    return true;
+                }
                 ___alcohol -= Time.deltaTime * 12f * Sun.sun.timescale;
                 if (___alcohol > 100f)
                 {
@@ -374,7 +375,7 @@ namespace SailwindDifficulty
                 [HarmonyPrefix]
                 public static bool Prefix()
                 {
-                    if (Plugin.difficulty.Value == "hard" && Plugin.hardCam.Value)
+                    if (Plugin.difficulty.Value == Difficulty.Hard && Plugin.hardCam.Value)
                     {
                         return false;
                     }
@@ -404,15 +405,74 @@ namespace SailwindDifficulty
         internal static class LoadPatch
         {
             [HarmonyPatch("LoadModData")]
-            [HarmonyPrefix]
-            public static void Prefix()
+            [HarmonyPostfix]
+            public static void LoadData()
             {
-                GameState.modData.TryGetValue("nandbrew.difficulty", out var difficulty);
-                Debug.Log("Testbed difficulty = " + Plugin.difficulty.Value);
-                Plugin.difficulty.Value = difficulty;
+                if (GameState.modData.ContainsKey(Plugin.PLUGIN_ID))
+                {
+                    GameState.modData.TryGetValue(Plugin.PLUGIN_ID, out var difficulty);
+                    Debug.Log("difficulty = " + Plugin.difficulty.Value);
 
-                //Plugin.UpdateGodMode(Plugin.godMode.Value);
+                    Enum.TryParse(difficulty, out Difficulty diff);
+                    Plugin.difficulty.Value = diff;
+                }
+                
+            }
+
+            [HarmonyPatch("SaveModData")]
+            [HarmonyPostfix]
+            public static void SavaData()
+            {
+                if (GameState.modData.ContainsKey(Plugin.PLUGIN_ID))
+                {
+                    GameState.modData[Plugin.PLUGIN_ID] = Plugin.difficulty.Value.ToString();
+                }
+                else
+                {
+                    GameState.modData.Add(Plugin.PLUGIN_ID, Plugin.difficulty.Value.ToString());
+                }
+                //GameState.modData.TryGetValue("nandbrew.difficulty", out var difficulty);
+                //Debug.Log("difficulty saved" + Plugin.difficulty.Value);
+
             }
         }
+
+        #region menu patches
+        [HarmonyPatch(typeof(StartMenu))]
+        internal static class StartMenuPatch
+        {
+            [HarmonyPatch("Awake")]
+            [HarmonyPostfix]
+            public static void Postfix(GameObject ___decoMedi, GameObject ___chooseIslandUI)
+            {
+                Transform panelParent = UnityEngine.Object.Instantiate(new GameObject() { name = "diffPanel" }.transform, ___chooseIslandUI.transform);
+                var newButton = UnityEngine.Object.Instantiate(___chooseIslandUI.transform.GetChild(2), panelParent);
+                newButton.name = "button difficulty";
+                var newPanel = UnityEngine.Object.Instantiate(___decoMedi.transform.GetChild(6), panelParent);
+                var newText = UnityEngine.Object.Instantiate(___decoMedi.transform.GetChild(2), panelParent);
+                newText.name = "description";
+                newText.GetComponent<TextMesh>().anchor = TextAnchor.UpperLeft;
+                newText.GetComponent<TextMesh>().fontSize = 70;
+                var newTitle = UnityEngine.Object.Instantiate(___decoMedi.transform.GetChild(8), panelParent);
+                newTitle.name = "title";
+                newTitle.gameObject.SetActive(false);
+
+                newPanel.localPosition = new Vector3(0, 0, 0);
+                newPanel.localScale = new Vector3(3.65f, 3f, 4.8457f);
+                newText.localPosition = new Vector3(-0.69f, 0.2f, -0.1f);
+                newTitle.localPosition = new Vector3(1.5f, 0.55f, -0.3f);
+
+                newButton.localPosition = new Vector3(0.09f, 0.4f, -0.1f);
+                newButton.localScale = new Vector3(0.9f, 0.9f, 0.9f);
+                var trigger = newButton.GetChild(0);
+                UnityEngine.Object.Destroy(trigger.GetComponent<StartMenuButton>());
+                var component = trigger.gameObject.AddComponent<DifficultyButton>();
+                component.difficultyDesc = newText.GetComponent<TextMesh>();
+
+                panelParent.localPosition = new Vector3(2.1f, -0.3f, 0);
+            }
+        }
+        #endregion
+
     }
 }
