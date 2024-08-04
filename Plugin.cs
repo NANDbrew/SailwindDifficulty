@@ -10,9 +10,9 @@ namespace SailwindDifficulty
     //[BepInDependency("com.app24.sailwindmoddinghelper", "2.0.3")]
     public class Plugin : BaseUnityPlugin
     {
-        public const string PLUGIN_ID = "com.yourname.SailwindDifficulty";
-        public const string PLUGIN_NAME = "SailwindDifficulty";
-        public const string PLUGIN_VERSION = "0.0.1";
+        public const string PLUGIN_ID = "com.nandbrew.sailwinddifficulty";
+        public const string PLUGIN_NAME = "Sailwind Difficulty";
+        public const string PLUGIN_VERSION = "1.0.0";
 
         //--settings--
         //internal ConfigEntry<bool> someSetting;
