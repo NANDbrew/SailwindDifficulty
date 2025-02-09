@@ -23,8 +23,7 @@ namespace SailwindDifficulty
         {
             if (difficulty == Difficulty.Hard)
             {
-                if (Plugin.godMode.Value) difficulty = Difficulty.Casual;
-                else difficulty = Difficulty.Easy;
+                difficulty = Difficulty.Casual;
             }
             else
             {
