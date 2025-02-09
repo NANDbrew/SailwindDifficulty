@@ -321,8 +321,8 @@ namespace SailwindDifficulty
                 ___sleep += Time.deltaTime * Sun.sun.timescale * 5f * (1 - Plugin.sleepMult.Value);
                 ___food += Time.deltaTime * Sun.sun.timescale * 3f * (1 - Plugin.foodMult.Value);
                 ___water += Time.deltaTime * Sun.sun.timescale * 4f * (1 - Plugin.waterMult.Value);
-                ___vitamins += Time.deltaTime * Sun.sun.timescale * 0.2f * (1 - Plugin.vitaminsMult.Value);
-                ___protein += Time.deltaTime * Sun.sun.timescale * 0.2f * (1 - Plugin.vitaminsMult.Value);
+                ___vitamins += Time.deltaTime * Sun.sun.timescale * 0.2f * (1 - Plugin.nutritionMult.Value);
+                ___protein += Time.deltaTime * Sun.sun.timescale * 0.2f * (1 - Plugin.nutritionMult.Value);
 
                 return true;
             }
@@ -346,22 +346,6 @@ namespace SailwindDifficulty
                 }
             }
         }
-
-
-
-        /*    [HarmonyPatch(typeof(OVRPlayerController))]
-            internal static class MovementPatches
-            {
-                [HarmonyPatch("UpdateMovement")]
-                [HarmonyPrefix]
-                public static void Prefix(OVRPlayerController __instance)
-                {
-                    if (PlayerNeeds.sleep < 50)
-                    {
-                        __instance.SetMoveScaleMultiplier(0.6f);
-                    }
-                }
-            }  */
 
         [HarmonyPatch(typeof(SaveLoadManager))]
         internal static class LoadPatch
@@ -387,7 +371,7 @@ namespace SailwindDifficulty
                         Plugin.sleepMult.Value = float.Parse(strings[1], CultureInfo.InvariantCulture);
                         Plugin.foodMult.Value = float.Parse(strings[2], CultureInfo.InvariantCulture);
                         Plugin.waterMult.Value = float.Parse(strings[3], CultureInfo.InvariantCulture);
-                        Plugin.vitaminsMult.Value = float.Parse(strings[4], CultureInfo.InvariantCulture);
+                        Plugin.nutritionMult.Value = float.Parse(strings[4], CultureInfo.InvariantCulture);
                         Debug.Log("SailwindDifficulty set needs multipliers from save");
                     }
 
@@ -403,7 +387,7 @@ namespace SailwindDifficulty
                 text += sep + Plugin.sleepMult.Value.ToString(CultureInfo.InvariantCulture);
                 text += sep + Plugin.foodMult.Value.ToString(CultureInfo.InvariantCulture);
                 text += sep + Plugin.waterMult.Value.ToString(CultureInfo.InvariantCulture);
-                text += sep + Plugin.vitaminsMult.Value.ToString(CultureInfo.InvariantCulture);
+                text += sep + Plugin.nutritionMult.Value.ToString(CultureInfo.InvariantCulture);
 
                 if (GameState.modData.ContainsKey(Plugin.PLUGIN_ID))
                 {

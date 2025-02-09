@@ -34,7 +34,7 @@ namespace SailwindDifficulty
         internal static ConfigEntry<float> sleepMult;
         internal static ConfigEntry<float> foodMult;
         internal static ConfigEntry<float> waterMult;
-        internal static ConfigEntry<float> vitaminsMult;
+        internal static ConfigEntry<float> nutritionMult;
 
         private void Awake()
         {
@@ -44,10 +44,10 @@ namespace SailwindDifficulty
             hardCam = Config.Bind("", "Disable external camera on hard", true, new ConfigDescription("", null));
             //godMode = Config.Bind("", "Allow casual mode", false, new ConfigDescription("", null));
 
-            sleepMult = Config.Bind("Needs Multipliers", "sleep multiplier", 1f, new ConfigDescription("Depletion rate. Ignored on Casual", new AcceptableValueRange<float>(0f, 2f), new ConfigurationManagerAttributes { IsAdvanced = true }));
-            foodMult = Config.Bind("Needs Multipliers", "food multiplier", 1f, new ConfigDescription("Depletion rate. Ignored on Casual", new AcceptableValueRange<float>(0f, 2f), new ConfigurationManagerAttributes { IsAdvanced = true }));
-            waterMult = Config.Bind("Needs Multipliers", "water multiplier", 1f, new ConfigDescription("Depletion rate. Ignored on Casual", new AcceptableValueRange<float>(0f, 2f), new ConfigurationManagerAttributes { IsAdvanced = true }));
-            vitaminsMult = Config.Bind("Needs Multipliers", "vitamins multiplier", 1f, new ConfigDescription("Depletion rate. Ignored on Casual", new AcceptableValueRange<float>(0f, 2f), new ConfigurationManagerAttributes { IsAdvanced = true }));
+            sleepMult = Config.Bind("Needs Multipliers", "sleep multiplier", 1f, new ConfigDescription("Depletion rate. Ignored on Casual", new AcceptableValueRange<float>(0f, 20f), new ConfigurationManagerAttributes { IsAdvanced = true }));
+            foodMult = Config.Bind("Needs Multipliers", "food multiplier", 1f, new ConfigDescription("Depletion rate. Ignored on Casual", new AcceptableValueRange<float>(0f, 20f), new ConfigurationManagerAttributes { IsAdvanced = true }));
+            waterMult = Config.Bind("Needs Multipliers", "water multiplier", 1f, new ConfigDescription("Depletion rate. Ignored on Casual", new AcceptableValueRange<float>(0f, 20f), new ConfigurationManagerAttributes { IsAdvanced = true }));
+            nutritionMult = Config.Bind("Needs Multipliers", "nutrition multiplier", 1f, new ConfigDescription("Depletion rate. Ignored on Casual", new AcceptableValueRange<float>(0f, 20f), new ConfigurationManagerAttributes { IsAdvanced = true }));
 
             difficulty.SettingChanged += (sender, args) => UpdateMultipliers();
             difficulty.Value = Difficulty.Normal;
@@ -59,7 +59,7 @@ namespace SailwindDifficulty
             sleepMult.Value = multipliers[0];
             foodMult.Value = multipliers[1];
             waterMult.Value = multipliers[2];
-            vitaminsMult.Value = multipliers[3];
+            nutritionMult.Value = multipliers[3];
 
         }
     }
