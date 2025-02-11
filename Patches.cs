@@ -19,6 +19,11 @@ namespace SailwindDifficulty
         {
             public static void Prefix(StarterSet __instance, PortRegion ___region)
             {
+                if (Plugin.difficulty.Value == Difficulty.Easy || Plugin.difficulty.Value == Difficulty.Casual)
+                {
+                    PlayerGold.currency[(int)___region] *= 2;
+                }
+
                 if (___region == PortRegion.medi)
                 {
                     var mug = __instance.transform.Find("100 mug wood");
@@ -142,11 +147,7 @@ namespace SailwindDifficulty
 
                     }
                 }
-                if (Plugin.difficulty.Value == Difficulty.Easy || Plugin.difficulty.Value == Difficulty.Casual)
-                {
-                    PlayerGold.currency[(int)___region] *= 2;
-                }
-                //Plugin.sleepMult.Value = Plugin.defaultDiffs.ElementAt((int)Plugin.difficulty.Value);
+                //Plugin.sleepMult.Value = Plugin.defaultMultipliers.ElementAt((int)Plugin.difficulty.Value);
 
 
                 Debug.Log("SailwindDifficulty: adjusted starter set");
@@ -368,10 +369,18 @@ namespace SailwindDifficulty
 
                     if (strings.Length >= 5)
                     {
-                        Plugin.sleepMult.Value = float.Parse(strings[1], CultureInfo.InvariantCulture);
-                        Plugin.foodMult.Value = float.Parse(strings[2], CultureInfo.InvariantCulture);
-                        Plugin.waterMult.Value = float.Parse(strings[3], CultureInfo.InvariantCulture);
-                        Plugin.nutritionMult.Value = float.Parse(strings[4], CultureInfo.InvariantCulture);
+                        float[] floats = new float[4];
+                        for (int i = 0; i < floats.Length; i++)
+                        {
+                            floats[i] = Mathf.Max(float.Parse(strings[i + 1], CultureInfo.InvariantCulture), 0f);
+#if DEBUG
+                            Debug.Log("float " + i + " = " + floats[i].ToString());
+#endif
+                        }
+                        Plugin.sleepMult.Value = floats[0];
+                        Plugin.foodMult.Value = floats[1];
+                        Plugin.waterMult.Value = floats[2];
+                        Plugin.nutritionMult.Value = floats[3];
                         Debug.Log("SailwindDifficulty set needs multipliers from save");
                     }
 
@@ -384,11 +393,13 @@ namespace SailwindDifficulty
             public static void SavaData()
             {
                 string text = Plugin.difficulty.Value.ToString();
-                text += sep + Plugin.sleepMult.Value.ToString(CultureInfo.InvariantCulture);
-                text += sep + Plugin.foodMult.Value.ToString(CultureInfo.InvariantCulture);
-                text += sep + Plugin.waterMult.Value.ToString(CultureInfo.InvariantCulture);
-                text += sep + Plugin.nutritionMult.Value.ToString(CultureInfo.InvariantCulture);
-
+                if (Plugin.sleepMult.Value != Plugin.defaultMultipliers[(int)Plugin.difficulty.Value][0] || Plugin.foodMult.Value != Plugin.defaultMultipliers[(int)Plugin.difficulty.Value][1] || Plugin.waterMult.Value != Plugin.defaultMultipliers[(int)Plugin.difficulty.Value][2] || Plugin.nutritionMult.Value != Plugin.defaultMultipliers[(int)Plugin.difficulty.Value][3])
+                {
+                    text += sep + Plugin.sleepMult.Value.ToString(CultureInfo.InvariantCulture);
+                    text += sep + Plugin.foodMult.Value.ToString(CultureInfo.InvariantCulture);
+                    text += sep + Plugin.waterMult.Value.ToString(CultureInfo.InvariantCulture);
+                    text += sep + Plugin.nutritionMult.Value.ToString(CultureInfo.InvariantCulture);
+                }
                 if (GameState.modData.ContainsKey(Plugin.PLUGIN_ID))
                 {
                     GameState.modData[Plugin.PLUGIN_ID] = text;

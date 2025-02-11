@@ -14,14 +14,14 @@ namespace SailwindDifficulty
     {
         public const string PLUGIN_ID = "com.nandbrew.sailwinddifficulty";
         public const string PLUGIN_NAME = "Sailwind Difficulty";
-        public const string PLUGIN_VERSION = "1.1.0";
+        public const string PLUGIN_VERSION = "1.1.1";
 
-        internal static Array[] defaultDiffs = new Array[]
-        {
-            new float[5] { 0f, 0f, 0f, 0f, 0f},
-            new float[5] { 0.7f, 0.7f, 0.7f, 0.7f, 0.7f },
-            new float[5] { 1f, 1f, 1f,1f, 1f },
-            new float[5] { 1f, 1f, 1f, 1f, 1f },
+        internal static float[][] defaultMultipliers = new float[][]
+        {// sleep, food, water, nutrition
+            new float[4] { 0f, 0f, 0f, 0f},
+            new float[4] { 0.7f, 0.7f, 0.7f, 0.7f},
+            new float[4] { 1f, 1f, 1f, 1f},
+            new float[4] { 1f, 1f, 1f, 1f},
         };
 
         //--settings--
@@ -44,10 +44,10 @@ namespace SailwindDifficulty
             hardCam = Config.Bind("", "Disable external camera on hard", true, new ConfigDescription("", null));
             //godMode = Config.Bind("", "Allow casual mode", false, new ConfigDescription("", null));
 
-            sleepMult = Config.Bind("Needs Multipliers", "sleep multiplier", 1f, new ConfigDescription("Depletion rate. Ignored on Casual", new AcceptableValueRange<float>(0f, 20f), new ConfigurationManagerAttributes { IsAdvanced = true }));
-            foodMult = Config.Bind("Needs Multipliers", "food multiplier", 1f, new ConfigDescription("Depletion rate. Ignored on Casual", new AcceptableValueRange<float>(0f, 20f), new ConfigurationManagerAttributes { IsAdvanced = true }));
-            waterMult = Config.Bind("Needs Multipliers", "water multiplier", 1f, new ConfigDescription("Depletion rate. Ignored on Casual", new AcceptableValueRange<float>(0f, 20f), new ConfigurationManagerAttributes { IsAdvanced = true }));
-            nutritionMult = Config.Bind("Needs Multipliers", "nutrition multiplier", 1f, new ConfigDescription("Depletion rate. Ignored on Casual", new AcceptableValueRange<float>(0f, 20f), new ConfigurationManagerAttributes { IsAdvanced = true }));
+            sleepMult = Config.Bind("Needs Multipliers", "sleep multiplier", 1f, new ConfigDescription("Depletion rate. Ignored on Casual", new AcceptableValueRange<float>(0f, 5f), new ConfigurationManagerAttributes { IsAdvanced = true }));
+            foodMult = Config.Bind("Needs Multipliers", "food multiplier", 1f, new ConfigDescription("Depletion rate. Ignored on Casual", new AcceptableValueRange<float>(0f, 5f), new ConfigurationManagerAttributes { IsAdvanced = true }));
+            waterMult = Config.Bind("Needs Multipliers", "water multiplier", 1f, new ConfigDescription("Depletion rate. Ignored on Casual", new AcceptableValueRange<float>(0f, 5f), new ConfigurationManagerAttributes { IsAdvanced = true }));
+            nutritionMult = Config.Bind("Needs Multipliers", "nutrition multiplier", 1f, new ConfigDescription("Depletion rate. Ignored on Casual", new AcceptableValueRange<float>(0f, 5f), new ConfigurationManagerAttributes { IsAdvanced = true }));
 
             difficulty.SettingChanged += (sender, args) => UpdateMultipliers();
             difficulty.Value = Difficulty.Normal;
@@ -55,11 +55,11 @@ namespace SailwindDifficulty
         }
         internal static void UpdateMultipliers()
         {
-            float[] multipliers = (float[])Plugin.defaultDiffs.ElementAt((int)Plugin.difficulty.Value);
-            sleepMult.Value = multipliers[0];
-            foodMult.Value = multipliers[1];
-            waterMult.Value = multipliers[2];
-            nutritionMult.Value = multipliers[3];
+            //float multipliers = defaultMultipliers[(int)difficulty.Value][0];
+            sleepMult.Value = defaultMultipliers[(int)difficulty.Value][0];
+            foodMult.Value = defaultMultipliers[(int)difficulty.Value][1];
+            waterMult.Value = defaultMultipliers[(int)difficulty.Value][2];
+            nutritionMult.Value = defaultMultipliers[(int)difficulty.Value][3];
 
         }
     }
